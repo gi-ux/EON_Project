@@ -1,7 +1,7 @@
 reset;
 
 /* Istruisce AMPL ad usare CPLEX*/
-option solver cplex;
+option solver gurobi;
 
 /* Disabilita il presolutore e attiva analisi di sensitivita' 	*/
 option presolve 0;
@@ -11,13 +11,13 @@ option cplex_options 'presolve 0 sensitivity';
 option display_round 2;
 
 model progetto.mod;  
-data progetto.dat;   
+data prova.dat;   
 
 solve;
 
 
-display {j in 1.._nvars} 
-	(_varname[j],_var[j],_var[j].lb,_var[j].ub,_var[j].rc);
-
-display {j in 1.._ncons} 
-	(_conname[j],_con[j].slack, _con[j].dual, _con[j].down, _con[j].up);
+display {j in 1.._nvars}
+    (_varname[j],_var[j], _var[j].lb, _var[j].ub, _var[j].rc);
+    
+display {j in 1.._ncons}
+    (_conname[j],_con[j].body, _con[j].slack, _con[j].dual);
