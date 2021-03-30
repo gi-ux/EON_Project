@@ -1,7 +1,7 @@
 reset;
 
 /* Istruisce AMPL ad usare CPLEX*/
-option solver gurobi;
+option solver cplex;
 
 /* Disabilita il presolutore e attiva analisi di sensitivita' 	*/
 option presolve 0;
@@ -21,3 +21,5 @@ display {j in 1.._nvars}
     
 display {j in 1.._ncons}
     (_conname[j],_con[j].body, _con[j].slack, _con[j].dual);
+
+display z;

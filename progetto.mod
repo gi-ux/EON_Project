@@ -11,12 +11,13 @@ param S; #tutto lo spettro disponibile (4000ghz oppure 4000/12,5)
 param Lam{M,K} binary;	#1 se la portata della modulazione soddisfa la lunghezza del percorso
 param r{M}; #capacità di un transceiver che opera a una modulazione m (0, 50gb/s; 1, 100; ...)
 param d{T}; #domanda di traffico da una coppia (s,d)
+param alpha1 = 10; #fattori di moltiplicazione
+param alpha2 = 1000;
+
 
 var dk1k2{K1K2} binary; #1 se k2 viene prima di k1
 var Smax >= 0; #spettro massimo utilizzato nella soluzione specifica
 var f{K} >= 0; #frequenze di inizio
-var alpha1 integer >= 0; #fattori di moltiplicazione
-var alpha2 integer >= 0;
 var b{M,K} integer >= 0; #numero di coppie di transceiver (uno su s e uno su d) con modulazione m che vengono usate su un percorso k
 var Beta{M,K} binary; #1 se la modulazione m viene usata sul traffico t sul percorso k
 

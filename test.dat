@@ -1,0 +1,9 @@
+set T := 0 1 2 3 4 5 6 7 8 9 10 11;
+set M := "BPSK" "QPSK" "8 QAM" "16 QAM" "32 QAM" "64 QAM";
+
+set K := 0 1 2 3 4 5 6 7 8 9 10;
+
+set K1K2 := 
+	0 2
+	0 5
+	
