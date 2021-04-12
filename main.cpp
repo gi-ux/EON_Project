@@ -200,10 +200,8 @@ int main() {
     vector<int> d = getDemands(demand);
 //    printData(d);
 
-
     ofstream outfile;
     outfile.open("test-write.dat");
-
     cout << "Writing to the file" << endl;
     string data = "test";
     outfile << data << endl;
