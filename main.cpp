@@ -1,7 +1,6 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include <algorithm>
 #include <map>
 #include <cstring>
 #include "string"
@@ -137,7 +136,7 @@ int main() {
     vector<string> m = {"BPSK", "QPSK", "8 QAM", "16 QAM", "32 QAM", "64 QAM"};
 //    printData(m);
 
-    //get all paths --> x2 avanti e indietro?
+    //get all paths todo: avanti e indietro
     vector<int> k = getNodes("3paths");
 //    printData(k);
 
@@ -154,6 +153,7 @@ int main() {
     }
 //    print_map(r);
 
+    //get all demands (D) todo avanti e indietro
     vector<int> d = getDemands(demand);
     printData(d);
     return 0;
