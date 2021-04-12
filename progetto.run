@@ -11,7 +11,7 @@ option cplex_options 'presolve 0 sensitivity';
 option display_round 2;
 
 model progetto.mod;  
-data prova.dat;   
+data test.dat;   
 
 solve;
 
