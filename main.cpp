@@ -3,7 +3,12 @@
 #include <vector>
 #include <map>
 #include <cstring>
-#include "string"
+#include <string>
+#include <sstream>
+
+#define EQUAL ":="
+#define STRING '"'
+
 
 using namespace std;
 
@@ -79,6 +84,14 @@ vector<int> getDemands(string demand)
     }
     file.close();
     return vector;
+}
+
+template <typename T>
+std::string NumberToString (T Number)
+{
+    std::ostringstream ss;
+    ss << Number;
+    return ss.str();
 }
 
 void menuDemand()
@@ -203,8 +216,22 @@ int main() {
     ofstream outfile;
     outfile.open("test-write.dat");
     cout << "Writing to the file" << endl;
-    string data = "test";
-    outfile << data << endl;
+    string data;
+    for(int i = 0; i<m.size(); i++)
+    {
+        data.append(" ");
+        data.append(STRING+m[i]+STRING);
+    }
+    data.append(";");
+    outfile << "M " EQUAL <<data << endl;
+    data.clear();
+    for(int i=0; i<t.size(); i++)
+    {
+        data.append(" ");
+        data.append(NumberToString(t[i]));
+    }
+    data.append(";");
+    outfile << "T " EQUAL <<data << endl;
     outfile.close();
 
     return 0;
