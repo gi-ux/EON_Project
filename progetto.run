@@ -1,11 +1,10 @@
 reset;
 
 /* Istruisce AMPL ad usare CPLEX*/
-option solver cplex;
+option solver gurobi;
 
 /* Disabilita il presolutore e attiva analisi di sensitivita' 	*/
-option presolve 0;
-option cplex_options 'presolve 0 sensitivity';
+option gurobi_options 'outlev=1 mipgap=0.03';
 
 /* Mostra fino alla seconda cifra decimale */
 option display_round 2;
@@ -17,7 +16,7 @@ solve;
 
 
 display {j in 1.._nvars}
-    (_varname[j],_var[j], _var[j].lb, _var[j].ub, _var[j].rc);
+    (_varname[j],_var[j], _var[j].lb);
     
 display {j in 1.._ncons}
     (_conname[j],_con[j].body, _con[j].slack, _con[j].dual);
