@@ -48,6 +48,17 @@ void print_map(std::map<K,V> const &m)
     }
 }
 
+vector<int> getPaths(string name)
+{
+    int dimPaths = getNodes(name).size() * 2;
+    vector<int> paths;
+    for(int i = 0; i < dimPaths; i++)
+    {
+        paths.push_back(i);
+    }
+    return paths;
+}
+
 
 vector<int> getDemands(string demand)
 {
@@ -70,7 +81,7 @@ vector<int> getDemands(string demand)
     return vector;
 }
 
-void menu()
+void menuDemand()
 {
     cout << "Select demand:" << endl;
     cout << "a -> demand_50_100_safe" << endl;
@@ -83,13 +94,23 @@ void menu()
     cout << "h -> demand_200_400_safe" << endl;
 }
 
+void menuPaths()
+{
+    cout << "Select path:" << endl;
+    cout << "1 -> 1paths" << endl;
+    cout << "2 -> 2paths" << endl;
+    cout << "3 -> 3paths" << endl;
+}
+
+
 
 int main() {
     string demand;
+    string path;
     char userInput='x';
     while (userInput != 'a' && userInput != 'b' && userInput != 'c' && userInput != 'd' && userInput != 'e' && userInput != 'f' && userInput != 'g' && userInput != 'h')
     {
-        menu();
+        menuDemand();
         cin >> userInput;
 
         if (userInput == 'a')
@@ -124,26 +145,48 @@ int main() {
             demand = "demand_200_400_safe";
         }else
         {
-            cout << "Invalid entry" << endl;
+            cout << "Invalid entry for demand" << endl;
         }
     }
 
-    //get nodes (T)
-    vector<int> t = getNodes("demand_50_100_safe");
-//    printData(t);
+    while (userInput != '1' && userInput != '2' && userInput != '3')
+    {
+        menuPaths();
+        cin >> userInput;
 
-    //set modulations (M)
-    vector<string> m = {"BPSK", "QPSK", "8 QAM", "16 QAM", "32 QAM", "64 QAM"};
-//    printData(m);
+        if (userInput == '1')
+        {
+            path = "1paths";
+        }else if (userInput == '2')
+        {
+            path = "2paths";
 
-    //get all paths todo: avanti e indietro
-    vector<int> k = getNodes("3paths");
-//    printData(k);
+        }else if(userInput == '3')
+        {
+            path = "3paths";
 
+        }else
+        {
+            cout << "Invalid entry for path" << endl;
+        }
+    }
+
+    //const values
     int q = 4;
     int g = 12.5;
     int b = 37.5;
     int s = 4000;
+    //set modulations (M)
+    vector<string> m = {"BPSK", "QPSK", "8 QAM", "16 QAM", "32 QAM", "64 QAM"};
+//    printData(m);
+
+    //get all nodes (T)
+    vector<int> t = getNodes("demand_50_100_safe");
+//    printData(t);
+
+    //get all paths (K)
+    vector<int> k = getPaths(path);
+//    printData(k);
 
     //capacità di un transceiver che opera a una modulazione m (0, 50gb/s; 1, 100; ...)
     map<string, int> r;
@@ -155,6 +198,16 @@ int main() {
 
     //get all demands (D) todo avanti e indietro
     vector<int> d = getDemands(demand);
-    printData(d);
+//    printData(d);
+
+
+    ofstream outfile;
+    outfile.open("test-write.dat");
+
+    cout << "Writing to the file" << endl;
+    string data = "test";
+    outfile << data << endl;
+    outfile.close();
+
     return 0;
 }
