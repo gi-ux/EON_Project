@@ -223,7 +223,7 @@ int main() {
         data.append(STRING+m[i]+STRING);
     }
     data.append(";");
-    outfile << "M " EQUAL <<data << endl;
+    outfile << "set M " EQUAL <<data << endl;
     data.clear();
     for(int i=0; i<t.size(); i++)
     {
@@ -231,7 +231,7 @@ int main() {
         data.append(NumberToString(t[i]));
     }
     data.append(";");
-    outfile << "T " EQUAL <<data << endl;
+    outfile << "set T " EQUAL <<data << endl;
     outfile.close();
 
     return 0;
