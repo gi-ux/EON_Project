@@ -184,7 +184,7 @@ int main() {
         }
     }
 
-    //const values
+    //const values (params)
     int q = 4;
     int g = 12.5;
     int b = 37.5;
@@ -232,7 +232,29 @@ int main() {
     }
     data.append(";");
     outfile << "set T " EQUAL <<data << endl;
-    outfile.close();
 
+
+    data.clear();
+    data.append(NumberToString(q));
+    data.append(";");
+    outfile << "param Q " EQUAL << data<< endl;
+
+
+    data.clear();
+    data.append(NumberToString(g));
+    data.append(";");
+    outfile << "param G " EQUAL << data<< endl;
+
+
+    data.clear();
+    data.append(NumberToString(b));
+    data.append(";");
+    outfile << "param B " EQUAL << data<< endl;
+
+    data.clear();
+    data.append(NumberToString(s));
+    data.append(";");
+    outfile << "param S " EQUAL << data<< endl;
+    outfile.close();
     return 0;
 }
