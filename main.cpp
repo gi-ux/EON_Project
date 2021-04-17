@@ -186,8 +186,8 @@ int main() {
 
     //const values (params)
     int q = 4;
-    int g = 12.5;
-    int b = 37.5;
+    float g = 12.5;
+    float b = 37.5;
     int s = 4000;
     //set modulations (M)
     vector<string> m = {"BPSK", "QPSK", "8 QAM", "16 QAM", "32 QAM", "64 QAM"};
