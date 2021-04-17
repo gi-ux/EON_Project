@@ -5,10 +5,25 @@
 #include <cstring>
 #include <string>
 #include <sstream>
+#include <set>
 
 #define EQUAL ":="
 #define STRING '"'
+#define CLOSE ";"
 using namespace std;
+
+struct comp {
+    template <typename T>
+
+    bool operator()(const T& l,
+                    const T& r) const
+    {
+        if (l.second != r.second) {
+            return l.second < r.second;
+        }
+        return l.first < r.first;
+    }
+};
 
 void readfile(string name)
 {
@@ -49,6 +64,12 @@ void print_map(std::map<K,V> const &m)
     for (auto const& pair: m) {
         std::cout << "{" << pair.first << ": " << pair.second << "}\n";
     }
+}
+
+void sort(map<string, int>& M)
+{
+    set<pair<string, int>, comp> S(M.begin(),
+                                   M.end());
 }
 
 vector<int> getPaths(string name)
@@ -221,8 +242,7 @@ int main() {
         data.append(" ");
         data.append(STRING+i+STRING);
     }
-    data.append(";");
-    outfile << "set M " EQUAL <<data << endl;
+    outfile << "set M " EQUAL << data << CLOSE << endl;
     data.clear();
 
     //Writing T
@@ -231,11 +251,10 @@ int main() {
         data.append(" ");
         data.append(NumberToString(i));
     }
-    data.append(";");
-    outfile << "set T " EQUAL <<data << endl;
+    outfile << "set T " EQUAL << data << CLOSE << endl;
     data.clear();
 
-    //Writing K
+    /* Writing K
     for(int i : k)
     {
         data.append(" ");
@@ -244,31 +263,38 @@ int main() {
     data.append(";");
     outfile << "set K " EQUAL <<data << endl;
     data.clear();
+    */
 
     //Writing Q
     data.append(NumberToString(q));
-    data.append(";");
-    outfile << "param Q " EQUAL << data<< endl;
+    outfile << "param Q " EQUAL << data << CLOSE << endl;
     data.clear();
 
     //Writing G
     data.append(NumberToString(g));
-    data.append(";");
-    outfile << "param G " EQUAL << data<< endl;
+    outfile << "param G " EQUAL <<" " + data << CLOSE << endl;
     data.clear();
 
     //Writing B
     data.append(NumberToString(b));
-    data.append(";");
-    outfile << "param B " EQUAL << data<< endl;
+    outfile << "param B " EQUAL << " " + data << CLOSE << endl;
     data.clear();
 
     //Writing S
     data.append(NumberToString(s));
-    data.append(";");
-    outfile << "param S " EQUAL << data<< endl;
+    outfile << "param S " EQUAL << " " + data << CLOSE << endl;
+    data.clear();
+
+    //Writing R
+    sort(r); //--> doesn't work :(
+    for (auto& x: r) {
+        data.append(" ");
+        data.append(STRING+x.first+STRING);
+        data.append(" ");
+        data.append(NumberToString(x.second));
+    }
+    outfile << "param r " EQUAL << data << CLOSE << endl;
+    data.clear();
     outfile.close();
-
-
     return 0;
 }
