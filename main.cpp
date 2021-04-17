@@ -8,8 +8,6 @@
 
 #define EQUAL ":="
 #define STRING '"'
-
-
 using namespace std;
 
 void readfile(string name)
@@ -64,7 +62,6 @@ vector<int> getPaths(string name)
     return paths;
 }
 
-
 vector<int> getDemands(string demand)
 {
     string delimiter = " ";
@@ -114,8 +111,6 @@ void menuPaths()
     cout << "2 -> 2paths" << endl;
     cout << "3 -> 3paths" << endl;
 }
-
-
 
 int main() {
     string demand;
@@ -189,17 +184,18 @@ int main() {
     float g = 12.5;
     float b = 37.5;
     int s = 4000;
+
     //set modulations (M)
     vector<string> m = {"BPSK", "QPSK", "8 QAM", "16 QAM", "32 QAM", "64 QAM"};
-//    printData(m);
+    //printData(m);
 
     //get all nodes (T)
     vector<int> t = getNodes("demand_50_100_safe");
-//    printData(t);
+    //printData(t);
 
     //get all paths (K)
     vector<int> k = getPaths(path);
-//    printData(k);
+    //printData(k);
 
     //capacità di un transceiver che opera a una modulazione m (0, 50gb/s; 1, 100; ...)
     map<string, int> r;
@@ -207,54 +203,72 @@ int main() {
     {
         r.insert(pair<string, int>(m[i-1],i*50));
     }
-//    print_map(r);
+    //print_map(r);
 
     //get all demands (D) todo avanti e indietro
     vector<int> d = getDemands(demand);
-//    printData(d);
+    //printData(d);
 
+    //WRITING ON FILE
     ofstream outfile;
     outfile.open("test-write.dat");
     cout << "Writing to the file" << endl;
     string data;
-    for(int i = 0; i<m.size(); i++)
+
+    //Writing M
+    for(auto & i : m)
     {
         data.append(" ");
-        data.append(STRING+m[i]+STRING);
+        data.append(STRING+i+STRING);
     }
     data.append(";");
     outfile << "set M " EQUAL <<data << endl;
     data.clear();
-    for(int i=0; i<t.size(); i++)
+
+    //Writing T
+    for(int i : t)
     {
         data.append(" ");
-        data.append(NumberToString(t[i]));
+        data.append(NumberToString(i));
     }
     data.append(";");
     outfile << "set T " EQUAL <<data << endl;
-
-
     data.clear();
+
+    //Writing K
+    for(int i : k)
+    {
+        data.append(" ");
+        data.append(NumberToString(i));
+    }
+    data.append(";");
+    outfile << "set K " EQUAL <<data << endl;
+    data.clear();
+
+    //Writing Q
     data.append(NumberToString(q));
     data.append(";");
     outfile << "param Q " EQUAL << data<< endl;
-
-
     data.clear();
+
+    //Writing G
     data.append(NumberToString(g));
     data.append(";");
     outfile << "param G " EQUAL << data<< endl;
-
-
     data.clear();
+
+    //Writing B
     data.append(NumberToString(b));
     data.append(";");
     outfile << "param B " EQUAL << data<< endl;
-
     data.clear();
+
+    //Writing S
     data.append(NumberToString(s));
     data.append(";");
     outfile << "param S " EQUAL << data<< endl;
     outfile.close();
+
+
     return 0;
 }
