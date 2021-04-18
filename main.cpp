@@ -6,24 +6,12 @@
 #include <string>
 #include <sstream>
 #include <set>
+#include <algorithm>
 
 #define EQUAL ":="
 #define STRING '"'
 #define CLOSE ";"
 using namespace std;
-
-struct comp {
-    template <typename T>
-
-    bool operator()(const T& l,
-                    const T& r) const
-    {
-        if (l.second != r.second) {
-            return l.second < r.second;
-        }
-        return l.first < r.first;
-    }
-};
 
 void readfile(string name)
 {
@@ -64,12 +52,6 @@ void print_map(std::map<K,V> const &m)
     for (auto const& pair: m) {
         std::cout << "{" << pair.first << ": " << pair.second << "}\n";
     }
-}
-
-void sort(map<string, int>& M)
-{
-    set<pair<string, int>, comp> S(M.begin(),
-                                   M.end());
 }
 
 vector<int> getPaths(string name)
@@ -286,7 +268,6 @@ int main() {
     data.clear();
 
     //Writing R
-    sort(r); //--> doesn't work :(
     for (auto& x: r) {
         data.append(" ");
         data.append(STRING+x.first+STRING);
@@ -295,6 +276,9 @@ int main() {
     }
     outfile << "param r " EQUAL << data << CLOSE << endl;
     data.clear();
+
+    //Missing D (incomplete), Lam, Kt, K (incomplete), K1K2
+
     outfile.close();
     return 0;
 }
