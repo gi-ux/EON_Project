@@ -115,6 +115,27 @@ void menuPaths()
     cout << "3 -> 3paths" << endl;
 }
 
+vector<vector<string>> populate(string path)
+{
+    vector<vector<string>> container;
+    vector<string> vector;
+    string content;
+    ifstream file("..\\files\\" + path);
+
+    while(getline(file, content)) {
+        vector.clear();
+        std::istringstream iss(content);
+//        cout<<content<<endl;
+        for(std::string s; iss >> s; ) {
+            vector.push_back(s);
+
+        }
+        container.push_back(vector);
+    }
+    file.close();
+    return container;
+}
+
 int main() {
     string demand;
     string path;
@@ -208,9 +229,25 @@ int main() {
     }
     //print_map(r);
 
-    //get all demands (D) todo avanti e indietro
+    //get all demands (D)
     vector<int> d = getDemands(demand);
     //printData(d);
+
+    vector<pair<int, int>> k1k2;
+    vector<vector<string>> fileParsed = populate("..\\test-path.txt");
+    int init_index;
+    for(auto & row : fileParsed)
+    {
+        row.erase(row.begin() + 1, row.begin() + 6);
+    }
+
+    for(auto & row : fileParsed)
+    {
+        for(auto & i : row)
+            cout<<i<<" ";
+        cout<<endl;
+    }
+
 
     //WRITING ON FILE
     ofstream outfile;
@@ -236,7 +273,7 @@ int main() {
     outfile << "set T " EQUAL << data << CLOSE << endl;
     data.clear();
 
-    /* Writing K
+    // Writing K
     for(int i : k)
     {
         data.append(" ");
@@ -245,7 +282,6 @@ int main() {
     data.append(";");
     outfile << "set K " EQUAL <<data << endl;
     data.clear();
-    */
 
     //Writing Q
     data.append(NumberToString(q));
@@ -277,7 +313,19 @@ int main() {
     outfile << "param r " EQUAL << data << CLOSE << endl;
     data.clear();
 
-    //Missing D (incomplete), Lam, Kt, K (incomplete), K1K2
+    //Writing D
+    for(int i=0; i<d.size(); i++)
+    {
+        data.append(" ");
+        data.append(NumberToString(i));
+        data.append(" ");
+        data.append(NumberToString(d[i]));
+    }
+    outfile << "param d " EQUAL << data << CLOSE << endl;
+    data.clear();
+
+
+    //Missing Lam, Kt, K1K2
 
     outfile.close();
     return 0;
