@@ -4,86 +4,105 @@
 	<Project>
 		<Option title="EON_Project"/>
 		<Option makefile_is_custom="1"/>
-		<Option compiler="gcc"/>
+		<Option compiler="msvc8"/>
 		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="C:/Users/Gianluca/Desktop/Supsi/Git/EON_Project/cmake-build-debug"/>
+				<Option working_dir="C:/Users/andre/RepoScuola/EON_Project/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Gianluca/Desktop/Supsi/Git/EON_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Gianluca/Desktop/Supsi/Git/EON_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Gianluca/Desktop/Supsi/Git/EON_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Gianluca/Desktop/Supsi/Git/EON_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="nmake /NOLOGO /f C:\Users\andre\RepoScuola\EON_Project\cmake-build-debug\Makefile VERBOSE=1 all"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Users\andre\RepoScuola\EON_Project\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Users\andre\RepoScuola\EON_Project\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Users\andre\RepoScuola\EON_Project\cmake-build-debug\Makefile VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="EON_Project">
-				<Option output="C:/Users/Gianluca/Desktop/Supsi/Git/EON_Project/cmake-build-debug/EON_Project.exe" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="C:/Users/Gianluca/Desktop/Supsi/Git/EON_Project/cmake-build-debug"/>
+				<Option output="C:/Users/andre/RepoScuola/EON_Project/cmake-build-debug/EON_Project.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/andre/RepoScuola/EON_Project/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
-				<Option compiler="gcc"/>
+				<Option compiler="msvc8"/>
 				<Compiler>
-					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/8.2.0/include/c++"/>
-					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/8.2.0/include/c++/mingw32"/>
-					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/8.2.0/include/c++/backward"/>
-					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/8.2.0/include"/>
-					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/8.2.0/../../../../include"/>
-					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/8.2.0/include-fixed"/>
+					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29910\ATLMFC\include"/>
+					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29910\include"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\ucrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\shared"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\winrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\cppwinrt"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Gianluca/Desktop/Supsi/Git/EON_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 EON_Project"/>
-					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Gianluca/Desktop/Supsi/Git/EON_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Gianluca/Desktop/Supsi/Git/EON_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Gianluca/Desktop/Supsi/Git/EON_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="nmake /NOLOGO /f C:\Users\andre\RepoScuola\EON_Project\cmake-build-debug\Makefile VERBOSE=1 EON_Project"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Users\andre\RepoScuola\EON_Project\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Users\andre\RepoScuola\EON_Project\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Users\andre\RepoScuola\EON_Project\cmake-build-debug\Makefile VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="EON_Project/fast">
-				<Option output="C:/Users/Gianluca/Desktop/Supsi/Git/EON_Project/cmake-build-debug/EON_Project.exe" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="C:/Users/Gianluca/Desktop/Supsi/Git/EON_Project/cmake-build-debug"/>
+				<Option output="C:/Users/andre/RepoScuola/EON_Project/cmake-build-debug/EON_Project.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/andre/RepoScuola/EON_Project/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
-				<Option compiler="gcc"/>
+				<Option compiler="msvc8"/>
 				<Compiler>
-					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/8.2.0/include/c++"/>
-					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/8.2.0/include/c++/mingw32"/>
-					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/8.2.0/include/c++/backward"/>
-					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/8.2.0/include"/>
-					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/8.2.0/../../../../include"/>
-					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/8.2.0/include-fixed"/>
+					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29910\ATLMFC\include"/>
+					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29910\include"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\ucrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\shared"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\winrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\cppwinrt"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Gianluca/Desktop/Supsi/Git/EON_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 EON_Project/fast"/>
-					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Gianluca/Desktop/Supsi/Git/EON_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Gianluca/Desktop/Supsi/Git/EON_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Gianluca/Desktop/Supsi/Git/EON_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="nmake /NOLOGO /f C:\Users\andre\RepoScuola\EON_Project\cmake-build-debug\Makefile VERBOSE=1 EON_Project/fast"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Users\andre\RepoScuola\EON_Project\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Users\andre\RepoScuola\EON_Project\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Users\andre\RepoScuola\EON_Project\cmake-build-debug\Makefile VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="C:/Users/Gianluca/Desktop/Supsi/Git/EON_Project/cmake-build-debug"/>
+				<Option working_dir="C:/Users/andre/RepoScuola/EON_Project/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Gianluca/Desktop/Supsi/Git/EON_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Gianluca/Desktop/Supsi/Git/EON_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Gianluca/Desktop/Supsi/Git/EON_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Gianluca/Desktop/Supsi/Git/EON_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="nmake /NOLOGO /f C:\Users\andre\RepoScuola\EON_Project\cmake-build-debug\Makefile VERBOSE=1 edit_cache"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Users\andre\RepoScuola\EON_Project\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Users\andre\RepoScuola\EON_Project\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Users\andre\RepoScuola\EON_Project\cmake-build-debug\Makefile VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="C:/Users/Gianluca/Desktop/Supsi/Git/EON_Project/cmake-build-debug"/>
+				<Option working_dir="C:/Users/andre/RepoScuola/EON_Project/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Gianluca/Desktop/Supsi/Git/EON_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Gianluca/Desktop/Supsi/Git/EON_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Gianluca/Desktop/Supsi/Git/EON_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Gianluca/Desktop/Supsi/Git/EON_Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="nmake /NOLOGO /f C:\Users\andre\RepoScuola\EON_Project\cmake-build-debug\Makefile VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Users\andre\RepoScuola\EON_Project\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Users\andre\RepoScuola\EON_Project\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Users\andre\RepoScuola\EON_Project\cmake-build-debug\Makefile VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="C:/Users/Gianluca/Desktop/Supsi/Git/EON_Project/main.cpp">
+		<Unit filename="C:/Users/andre/RepoScuola/EON_Project/src/Data.cpp">
 			<Option target="EON_Project"/>
 		</Unit>
-		<Unit filename="C:/Users/Gianluca/Desktop/Supsi/Git/EON_Project/CMakeLists.txt">
+		<Unit filename="C:/Users/andre/RepoScuola/EON_Project/src/Link.cpp">
+			<Option target="EON_Project"/>
+		</Unit>
+		<Unit filename="C:/Users/andre/RepoScuola/EON_Project/src/Link.h">
+			<Option target="EON_Project"/>
+		</Unit>
+		<Unit filename="C:/Users/andre/RepoScuola/EON_Project/src/Path.cpp">
+			<Option target="EON_Project"/>
+		</Unit>
+		<Unit filename="C:/Users/andre/RepoScuola/EON_Project/src/Path.h">
+			<Option target="EON_Project"/>
+		</Unit>
+		<Unit filename="C:/Users/andre/RepoScuola/EON_Project/src/main.cpp">
+			<Option target="EON_Project"/>
+		</Unit>
+		<Unit filename="C:/Users/andre/RepoScuola/EON_Project/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
 	</Project>

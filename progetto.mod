@@ -14,7 +14,6 @@ param d{T}; #domanda di traffico da una coppia (s,d)
 param alpha1 = 1; #fattori di moltiplicazione
 param alpha2 = 1000;
 
-
 var dk1k2{K1K2} binary; #0 se f(k1) < f(k2) € K1K2
 var Smax >= 0; #spettro massimo utilizzato nella soluzione specifica
 var f{K} >= 0; #frequenze di inizio
@@ -33,5 +32,5 @@ s.t. terzo_vincolo{t in T}: sum{m in M} sum{k in Kt[t]} r[m] * b[m,k] >= d[t];
 s.t. quarto_vincolo{k in K}: f[k] + sum{m in M} B * b[m, k] + G <= Smax;
 
 s.t. quinto_vincolo{(k1,k2) in K1K2}: f[k1] + sum{m in M} B * b[m, k1] + G - f[k2] <= S * dk1k2[k1,k2];
- 
+
 s.t. sesto_vincolo{(k1,k2) in K1K2}: f[k2] + sum{m in M} B * b[m, k2] + G - f[k1] <= S * (1- dk1k2[k1,k2]);
