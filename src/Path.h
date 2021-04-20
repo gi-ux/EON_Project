@@ -29,6 +29,10 @@ public:
     bool share_link(Path path);
 
     std::string to_string();
+
+    friend bool operator== (const Path &p1, const Path &p2);
+
+    friend bool operator!= (const Path &p1, const Path &p2);
 };
 
 

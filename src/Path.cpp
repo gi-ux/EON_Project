@@ -39,3 +39,10 @@ std::string Path::to_string() {
     return std::string("path id: " + std::to_string(path_id) + " id from: " + std::to_string(id_from) + " id to: " + std::to_string(id_to) + " length: " + std::to_string(length) + " links: ").append(links);
 }
 
+bool operator== (const Path &p1, const Path &p2){
+    return (p1.path_id == p2.path_id && p1.id_from == p2.id_from && p1.id_to == p2.id_to && p1.length == p2.length);
+}
+
+bool operator!= (const Path &p1, const Path &p2){
+    return !(p1 == p2);
+}
