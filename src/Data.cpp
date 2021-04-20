@@ -12,6 +12,12 @@
 #include <algorithm>
 #include "NDArray.cpp"
 #include "Demand.h"
+#include "PathsForT.h"
+#include <cstdio>
+
+#define EQUAL ":="
+#define STRING '"'
+#define CLOSE ";"
 
 using namespace std;
 
@@ -80,28 +86,117 @@ void read_demands(vector<Demand> &demands, string filename){
     file.close();
 }
 
+void compute_Kt(vector<PathsForT> &kts, vector<Path> &paths, vector<Demand> &demands){
+    int index = 0;
+    for(auto &d : demands){
+        PathsForT kt(index);
+        for(auto &p : paths){
+            if(d.id_from == p.id_from && d.id_to == p.id_to){
+                kt.add_path(p);
+            }
+        }
+        index++;
+        kts.push_back(kt);
+    }
+}
+
+vector<vector<int>> read_reach(){
+    vector<vector<int>> reach;
+    string content;
+    ifstream file("..\\files\\reach");
+
+    while(getline(file, content)) {
+        vector<string> line = split(content);
+        if(line.size() > 0){
+            vector<int> col;
+            for(auto &data : line){
+                col.push_back(stoi(data));
+            }
+            reach.push_back(col);
+        }
+    }
+    file.close();
+
+    return reach;
+}
+vector<int> reach_col(int demand, vector<vector<int>> &reach){
+    vector<int> col;
+    for(auto &r : reach){
+        for(int i = 0; i <= r.size(); i++){
+            if((demand / 50 - 1) == i)
+                col.push_back(r[i]);
+        }
+    }
+    return col;
+}
+
+void compute_lambda(vector<Path> &paths, vector<Demand> &demands, vector<vector<int>> &reach, vector<vector<int>> &lambda){
+    for(auto &p : paths){
+        for(auto &d : demands){
+            if(p.id_from == d.id_from && p.id_to == d.id_to){
+                vector<int> r_col = reach_col(d.dem, reach);
+                for(int i = 0; i < r_col.size(); i++){
+                    if(r_col[i] > p.length)
+                        lambda.at(i).at(p.path_id) = 1;
+                    else
+                        lambda.at(i).at(p.path_id) = 0;
+                }
+            }
+        }
+    }
+}
+
+
+
 int main() {
     vector<Path> paths;
     vector<pair<int, int>> k1k2;
     vector<Demand> demands;
+    vector<PathsForT> kts;
+    vector<vector<int>> reach = read_reach();
+    vector<string> modulations = {"BPSK", "QPSK", "8 QAM", "16 QAM", "32 QAM", "64 QAM"};
 
-    read_paths(paths, "..\\files\\1paths");
+
+    //Read paths
+    read_paths(paths, "..\\files\\1path.txt");
     for(auto &path : paths) {
         cout << path.to_string() << endl;
     }
 
+    //K1K2
     NDArray share_link{{paths.size(), paths.size()}};
-
     compute_k1k2(paths, share_link, k1k2);
-
     for(auto &pair : k1k2){
         cout << pair.first << " - " << pair.second << endl;
     }
 
-    read_demands(demands, "..\\files\\demand_50_200_safe");
-
+    //Demands
+    read_demands(demands, "..\\files\\demand_50_200_safe.txt");
     for(auto &d : demands){
         cout << d.id_from << " " << d.id_to << " " << d.dem << endl;
+    }
+
+    //Kts
+    compute_Kt(kts, paths, demands);
+    for(auto &kt : kts){
+        cout << "Kt[" << kt.id_pair << "] = ";
+        for(auto &p : kt.paths){
+            cout << p.path_id << " ";
+        }
+        cout << endl;
+    }
+
+
+    //Lambda
+    //int lambda[modulations.size()][paths.size()];
+    vector<int> v(paths.size(), 0);
+    vector<vector<int>> lambda(modulations.size(), v);
+    compute_lambda(paths, demands, reach, lambda);
+    for (auto &r : lambda) {
+        for (auto &c : r) {
+            cout << c << " ";
+        }
+        cout << endl;
     }
 
     return 0;
