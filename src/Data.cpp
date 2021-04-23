@@ -7,13 +7,15 @@
 #include <string>
 #include <fstream>
 #include <sstream>
-#include "Path.h"
-#include "Link.h"
 #include <algorithm>
+#include <cstdio>
+#include <map>
+
 #include "NDArray.cpp"
 #include "Demand.h"
 #include "PathsForT.h"
-#include <cstdio>
+#include "Path.h"
+#include "Link.h"
 
 #define EQUAL ":="
 #define STRING '"'
@@ -21,6 +23,7 @@
 
 using namespace std;
 
+//Split string using space as delimiter
 vector<string> split(string s)
 {
     stringstream ss(s);
@@ -146,6 +149,124 @@ void compute_lambda(vector<Path> &paths, vector<Demand> &demands, vector<vector<
     }
 }
 
+template <typename T>
+std::string NumberToString (T Number)
+{
+    std::ostringstream ss;
+    ss << Number;
+    return ss.str();
+}
+
+void write_first_dat(string filename, vector<Path> paths, vector<pair<int, int>> k1k2, vector<Demand> demands, vector<PathsForT> kts, vector<string> modulations, int q,float g, float b, int s, map<string, int> r, vector<vector<int>> lambda){
+    ofstream outfile;
+    outfile.open(filename + ".dat");
+    cout << "Writing to the file" << endl;
+    string data;
+
+    //Write M
+    for(auto & i : modulations)
+    {
+        data.append(" ");
+        data.append(STRING+i+STRING);
+    }
+    outfile << "set M " EQUAL << data << CLOSE << endl;
+    data.clear();
+
+    //Write T
+    for(int i = 0; i < demands.size(); i++)
+    {
+        data.append(" ");
+        data.append(NumberToString(i));
+    }
+    outfile << "set T " EQUAL << data << CLOSE << endl;
+    data.clear();
+
+    // Write K
+    for(auto &p : paths)
+    {
+        data.append(" ");
+        data.append(NumberToString(p.path_id));
+    }
+    data.append(";");
+    outfile << "set K " EQUAL <<data << endl;
+    data.clear();
+
+    //Write K1K2
+    for(auto &k12 : k1k2){
+        data.append(" ");
+        data.append(NumberToString(k12.first) + " " + NumberToString(k12.second) + "\n");
+    }
+    data.append(";");
+    outfile << "set K1K2 " EQUAL << data << endl;
+    data.clear();
+
+    //Write Kts
+    outfile << endl;
+    for(auto &kt : kts){
+        outfile << "set Kt[" << kt.id_pair << "] :=";
+        for(auto &p : kt.paths){
+            outfile << " " << p.path_id;
+        }
+        outfile << ";" << endl;
+    }
+
+    //Write Q
+    data.append(NumberToString(q));
+    outfile << "param Q " EQUAL << data << CLOSE << endl;
+    data.clear();
+
+    //Write G
+    data.append(NumberToString(g));
+    outfile << "param G " EQUAL <<" " + data << CLOSE << endl;
+    data.clear();
+
+    //Write B
+    data.append(NumberToString(b));
+    outfile << "param B " EQUAL << " " + data << CLOSE << endl;
+    data.clear();
+
+    //Write S
+    data.append(NumberToString(s));
+    outfile << "param S " EQUAL << " " + data << CLOSE << endl;
+    data.clear();
+
+    //Write R
+    for (auto& x: r) {
+        data.append(" ");
+        data.append(STRING+x.first+STRING);
+        data.append(" ");
+        data.append(NumberToString(x.second));
+    }
+    outfile << "param r " EQUAL << data << CLOSE << endl;
+    data.clear();
+
+    //Write D
+    for(int i=0; i<demands.size(); i++)
+    {
+        data.append(" ");
+        data.append(NumberToString(i));
+        data.append(" ");
+        data.append(NumberToString(demands[i].dem));
+    }
+    outfile << "param d " EQUAL << data << CLOSE << endl;
+    data.clear();
+
+    //Write Lambda
+    outfile << "param Lam :";
+    for(auto &p : paths){
+        outfile << " " << p.path_id;
+    }
+    outfile << " :=" << endl;
+    for(int i = 0; i < lambda.size(); i++){
+        outfile << STRING << modulations[i] << STRING;
+        for(auto &val : lambda[i]){
+            outfile << " " << val;
+        }
+        outfile << endl;
+    }
+    outfile << ";" << endl;
+}
+
 
 
 int main() {
@@ -155,10 +276,18 @@ int main() {
     vector<PathsForT> kts;
     vector<vector<int>> reach = read_reach();
     vector<string> modulations = {"BPSK", "QPSK", "8 QAM", "16 QAM", "32 QAM", "64 QAM"};
-
+    int q = 4;
+    float g = 12.5;
+    float b = 37.5;
+    int s = 4000;
+    map<string, int> r;
+    for(int i = 1; i<= 6; i++)
+    {
+        r.insert(pair<string, int>(modulations[i-1],i*50));
+    }
 
     //Read paths
-    read_paths(paths, "..\\files\\1path.txt");
+    read_paths(paths, "..\\files\\1paths");
     for(auto &path : paths) {
         cout << path.to_string() << endl;
     }
@@ -171,7 +300,7 @@ int main() {
     }
 
     //Demands
-    read_demands(demands, "..\\files\\demand_50_200_safe.txt");
+    read_demands(demands, "..\\files\\demand_50_200_safe");
     for(auto &d : demands){
         cout << d.id_from << " " << d.id_to << " " << d.dem << endl;
     }
@@ -193,11 +322,13 @@ int main() {
     vector<vector<int>> lambda(modulations.size(), v);
     compute_lambda(paths, demands, reach, lambda);
     for (auto &r : lambda) {
-        for (auto &c : r) {
-            cout << c << " ";
+        for (int i = 0; i < r.size(); i++) {
+            cout<< r[i] << " ";
         }
-        cout << endl;
+        cout << "endline" << endl;
     }
+
+    write_first_dat("test-finale", paths, k1k2, demands, kts, modulations, q, g, b, s, r, lambda);
 
     return 0;
 }

@@ -10,7 +10,7 @@ option gurobi_options 'outlev=1 mipgap=0.03';
 option display_round 2;
 
 model progetto.mod;  
-data test.dat;   
+data test-finale.dat;   
 
 solve;
 
