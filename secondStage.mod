@@ -12,13 +12,16 @@ param beta = 1;
 
 var w{K1K2};
 var dk1k2{K1K2} binary; #0 se f(k1) < f(k2) € K1K2
-var f{K}; #variabili?
+var f{K};
+var w_min;
 
-maximize z: w; #da definire
+maximize z: w_min;
+
+s.t. vincolo_w_min{(k1,k2) in K1K2}: w_min <= w[k1,k2];
 
 s.t. settimo_vincolo{k in K}: f[k] + sum{m in M} B * b_star[m,k] + G <= beta * Smax_star;
 
-s.t. ottavo_vincolo{(k1,k2) in K1K2}: f[k1] + sum{m in M} B * b_star[m,k1] + G - f[k2] <= S d[k1,k2];
+s.t. ottavo_vincolo{(k1,k2) in K1K2}: f[k1] + sum{m in M} B * b_star[m,k1] + G - f[k2] <= S * d[k1,k2];
 
 s.t. nono_vincolo{(k1,k2) in K1K2}: f[k2] + sum{m in M} B * b_star[m,k2] + G - f[k1] <= S * (1-d[k1,k2]);
 
