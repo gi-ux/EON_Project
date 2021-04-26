@@ -2,20 +2,7 @@
 // Created by andre on 19.04.2021.
 //
 
-#include <iostream>
-#include <vector>
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <algorithm>
-#include <cstdio>
-#include <map>
-
-#include "NDArray.cpp"
-#include "Demand.h"
-#include "PathsForT.h"
-#include "Path.h"
-#include "Link.h"
+#include "Data.h"
 
 #define EQUAL ":="
 #define STRING '"'
@@ -23,8 +10,43 @@
 
 using namespace std;
 
+Data::Data(string pathFilename, string demandsFilename) : path_filename(std::move(
+        pathFilename)), demands_filename(std::move(demandsFilename)), q(0), g(12.5), b(37.5), s(4000), share_link({0, 0}) {
+
+}
+
+Data::Data(const Data &d){
+
+}
+
+void Data::init(){
+    paths = vector<Path>();
+    k1k2 = vector<std::pair<int, int>>();
+    demands = vector<Demand>();
+    kts = vector<PathsForT>();
+    reach = vector<std::vector<int>>();
+    modulations = {"BPSK", "QPSK", "8 QAM", "16 QAM", "32 QAM", "64 QAM"};
+
+
+    read_paths();
+
+    share_link = NDArray({paths.size(), paths.size()});
+    compute_k1k2();
+
+    read_demands();
+    compute_Kt();
+    read_reach();
+
+    vector<int> v(paths.size(), 0);
+    lambda = vector<std::vector<int>> (modulations.size(), v);
+    compute_lambda();
+
+    compute_q();
+    compute_r();
+}
+
 //Split string using space as delimiter
-vector<string> split(string s)
+vector<string> Data::split(string s)
 {
     stringstream ss(s);
     string word;
@@ -35,12 +57,12 @@ vector<string> split(string s)
     return res;
 }
 
-void read_paths(vector<Path> &paths, string filename) {
+void Data::read_paths() {
     string content;
-    ifstream file(filename);
+    ifstream file(path_filename);
     while(getline(file, content)) {
         vector<string> line = split(content);
-        if(line.size() > 0) {
+        if(!line.empty()) {
             Path pfw(stoi(line[0])*2, stoi(line[1]), stoi(line[2]), stoi(line[4]));
             Path pbw(stoi(line[0])*2+1, stoi(line[2]), stoi(line[1]), stoi(line[4]));
             for(int i = 1; i < stoi(line[5]); i++) {
@@ -58,9 +80,7 @@ void read_paths(vector<Path> &paths, string filename) {
     }
 }
 
-void compute_k1k2(vector<Path> &paths, NDArray &share_link, vector<pair<int, int>> &interferring_paths){
-    int npaths = paths.size();
-
+void Data::compute_k1k2(){
     for(auto &p1 : paths){
         for(auto &p2 : paths){
              if(p2.path_id < p1.path_id){
@@ -69,19 +89,20 @@ void compute_k1k2(vector<Path> &paths, NDArray &share_link, vector<pair<int, int
              if((p1 != p2) and (p1.id_from != p2.id_from || p1.id_to != p2.id_to) and p1.share_link(p2)){
                 share_link[{static_cast<unsigned long long>(p1.path_id), static_cast<unsigned long long>(p2.path_id)}] = 1;
                 share_link[{static_cast<unsigned long long>(p2.path_id), static_cast<unsigned long long>(p1.path_id)}] = 1;
-                interferring_paths.emplace_back(p1.path_id, p2.path_id);
+                k1k2.emplace_back(p1.path_id, p2.path_id);
              }
         }
     }
 }
 
-void read_demands(vector<Demand> &demands, string filename){
+void Data::read_demands(){
     string content;
-    ifstream file("..\\files\\" + filename);
+    ifstream file(demands_filename);
 
     while(getline(file, content)) {
         vector<string> line = split(content);
-        if(line.size() > 0) {
+        if(!line.empty()) {
+
             Demand d(stoi(line[0]), stoi(line[1]), stoi(line[2]));
             demands.push_back(d);
         }
@@ -89,7 +110,7 @@ void read_demands(vector<Demand> &demands, string filename){
     file.close();
 }
 
-void compute_Kt(vector<PathsForT> &kts, vector<Path> &paths, vector<Demand> &demands){
+void Data::compute_Kt(){
     int index = 0;
     for(auto &d : demands){
         PathsForT kt(index);
@@ -103,14 +124,13 @@ void compute_Kt(vector<PathsForT> &kts, vector<Path> &paths, vector<Demand> &dem
     }
 }
 
-vector<vector<int>> read_reach(){
-    vector<vector<int>> reach;
+void Data::read_reach(){
     string content;
     ifstream file("..\\files\\reach");
 
     while(getline(file, content)) {
         vector<string> line = split(content);
-        if(line.size() > 0){
+        if(!line.empty()){
             vector<int> col;
             for(auto &data : line){
                 col.push_back(stoi(data));
@@ -119,25 +139,24 @@ vector<vector<int>> read_reach(){
         }
     }
     file.close();
-
-    return reach;
 }
-vector<int> reach_col(int demand, vector<vector<int>> &reach){
+
+vector<int> Data::reach_col(int demand){
     vector<int> col;
-    for(auto &r : reach){
-        for(int i = 0; i <= r.size(); i++){
+    for(auto &r_ele : reach){
+        for(int i = 0; i <= r_ele.size(); i++){
             if((demand / 50 - 1) == i)
-                col.push_back(r[i]);
+                col.push_back(r_ele[i]);
         }
     }
     return col;
 }
 
-void compute_lambda(vector<Path> &paths, vector<Demand> &demands, vector<vector<int>> &reach, vector<vector<int>> &lambda){
+void Data::compute_lambda(){
     for(auto &p : paths){
         for(auto &d : demands){
             if(p.id_from == d.id_from && p.id_to == d.id_to){
-                vector<int> r_col = reach_col(d.dem, reach);
+                vector<int> r_col = reach_col(d.dem);
                 for(int i = 0; i < r_col.size(); i++){
                     if(r_col[i] > p.length)
                         lambda.at(i).at(p.path_id) = 1;
@@ -149,7 +168,7 @@ void compute_lambda(vector<Path> &paths, vector<Demand> &demands, vector<vector<
     }
 }
 
-int compute_q(vector<Demand> demands){
+void Data::compute_q(){
     int max;
     int min;
     for (int i = 0; i < demands.size(); ++i) {
@@ -162,9 +181,15 @@ int compute_q(vector<Demand> demands){
             min = demands[i].dem;
         }
     }
-    return max/min;
+    q = max/min;
 }
 
+void Data::compute_r(){
+    for(int i = 1; i<= 6; i++)
+    {
+        r.insert(pair<string, int>(modulations[i-1],i*50));
+    }
+}
 
 template <typename T>
 std::string NumberToString (T Number)
@@ -174,7 +199,7 @@ std::string NumberToString (T Number)
     return ss.str();
 }
 
-void write_first_dat(string filename, vector<Path> paths, vector<pair<int, int>> k1k2, vector<Demand> demands, vector<PathsForT> kts, vector<string> modulations, int q,float g, float b, int s, map<string, int> r, vector<vector<int>> lambda){
+void Data::write_first_dat(string filename){
     ofstream outfile;
     outfile.open("../" + filename + ".dat");
     cout << "Writing to the file" << endl;
@@ -282,71 +307,4 @@ void write_first_dat(string filename, vector<Path> paths, vector<pair<int, int>>
         outfile << endl;
     }
     outfile << ";" << endl;
-}
-
-
-int main() {
-    vector<Path> paths;
-    vector<pair<int, int>> k1k2;
-    vector<Demand> demands;
-    vector<PathsForT> kts;
-    vector<vector<int>> reach = read_reach();
-    vector<string> modulations = {"BPSK", "QPSK", "8 QAM", "16 QAM", "32 QAM", "64 QAM"};
-    float g = 12.5;
-    float b = 37.5;
-    int s = 4000;
-    map<string, int> r;
-    for(int i = 1; i<= 6; i++)
-    {
-        r.insert(pair<string, int>(modulations[i-1],i*50));
-    }
-
-    //Read paths
-    read_paths(paths, "..\\files\\3paths");
-    for(auto &path : paths) {
-        cout << path.to_string() << endl;
-    }
-
-    //K1K2
-    NDArray share_link{{paths.size(), paths.size()}};
-    compute_k1k2(paths, share_link, k1k2);
-    for(auto &pair : k1k2){
-        //cout << pair.first << " - " << pair.second << endl;
-    }
-
-    //Demands
-    read_demands(demands, "..\\files\\demand_50_200_safe");
-    for(auto &d : demands){
-        cout << d.id_from << " " << d.id_to << " " << d.dem << endl;
-    }
-
-    //Compute q
-    int q = compute_q(demands);
-
-    //Kts
-    compute_Kt(kts, paths, demands);
-    for(auto &kt : kts){
-        //cout << "Kt[" << kt.id_pair << "] = ";
-        for(auto &p : kt.paths){
-            //cout << p.path_id << " ";
-        }
-        //cout << endl;
-    }
-
-
-    //Lambda
-    //int lambda[modulations.size()][paths.size()];
-    vector<int> v(paths.size(), 0);
-    vector<vector<int>> lambda(modulations.size(), v);
-    compute_lambda(paths, demands, reach, lambda);
-    for (auto &r : lambda) {
-        for (int i = 0; i < r.size(); i++) {
-            cout<< r[i] << " ";
-        }
-        cout << "endline" << endl;
-    }
-
-    write_first_dat("test-finale", paths, k1k2, demands, kts, modulations, q, g, b, s, r, lambda);
-
-    return 0;
 }
