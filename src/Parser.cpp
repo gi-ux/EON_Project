@@ -18,17 +18,11 @@ int main(){
     mod1.write_first_dat("test-finale");
 
     ampl::Environment env("ampl");
-    cout << "test 1 " << endl;
     ampl::AMPL ampl(env);
-    cout << "test 2 " << endl;
     ampl.setOption("solver", "gurobi");
     ampl.setOption("gurobi_options", "outlev=1 mipgap=0.03");
-    cout << "test 3 " << endl;
     ampl.read("../progetto.mod");
-    cout << "test 4 " << endl;
     ampl.readData("../test-finale.dat");
-    cout << "test 5 " << endl;
-
     ampl.solve();
 
     ampl::Variable smax = ampl.getVariable("Smax");
@@ -42,6 +36,5 @@ int main(){
     ampl::Objective z = ampl.getObjective("z");
     cout << z.get().value() << endl;
 
-    cout << "test 6 " << endl;
 }
 

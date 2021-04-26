@@ -13,3 +13,9 @@ add_custom_command(TARGET EON_Project POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         "${PROJECT_SOURCE_DIR}/dependencies/ampl"
         $<TARGET_FILE_DIR:EON_Project>/ampl )
+
+
+add_custom_command(TARGET EON_Project POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${PROJECT_SOURCE_DIR}/dependencies/amplapi/bin/ampl-2.0.4.0.dll"
+        $<TARGET_FILE_DIR:EON_Project>)
