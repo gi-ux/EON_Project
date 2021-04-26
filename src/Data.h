@@ -31,7 +31,7 @@ public:
     std::vector<PathsForT> kts;
     std::vector<std::vector<int>> reach;
     std::vector<std::string> modulations;
-    NDArray share_link;
+    std::vector<std::vector<int>> share_link;
     float g;
     float b;
     int s;

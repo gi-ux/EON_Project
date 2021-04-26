@@ -11,7 +11,7 @@
 using namespace std;
 
 Data::Data(string pathFilename, string demandsFilename) : path_filename(std::move(
-        pathFilename)), demands_filename(std::move(demandsFilename)), q(0), g(12.5), b(37.5), s(4000), share_link({0, 0}) {
+        pathFilename)), demands_filename(std::move(demandsFilename)), q(0), g(12.5), b(37.5), s(4000) {
 
 }
 
@@ -24,21 +24,21 @@ void Data::init(){
     k1k2 = vector<std::pair<int, int>>();
     demands = vector<Demand>();
     kts = vector<PathsForT>();
-    reach = vector<std::vector<int>>();
+    reach = vector<vector<int>>();
     modulations = {"BPSK", "QPSK", "8 QAM", "16 QAM", "32 QAM", "64 QAM"};
 
 
     read_paths();
 
-    share_link = NDArray({paths.size(), paths.size()});
+    share_link = vector<vector<int>>(paths.size(), vector<int>(paths.size()));
     compute_k1k2();
 
     read_demands();
     compute_Kt();
     read_reach();
 
-    vector<int> v(paths.size(), 0);
-    lambda = vector<std::vector<int>> (modulations.size(), v);
+    vector<int> d2(paths.size(), 0);
+    lambda = vector<vector<int>> (modulations.size(), d2);
     compute_lambda();
 
     compute_q();
@@ -81,14 +81,15 @@ void Data::read_paths() {
 }
 
 void Data::compute_k1k2(){
+
     for(auto &p1 : paths){
         for(auto &p2 : paths){
              if(p2.path_id < p1.path_id){
                  continue;
              }
              if((p1 != p2) and (p1.id_from != p2.id_from || p1.id_to != p2.id_to) and p1.share_link(p2)){
-                share_link[{static_cast<unsigned long long>(p1.path_id), static_cast<unsigned long long>(p2.path_id)}] = 1;
-                share_link[{static_cast<unsigned long long>(p2.path_id), static_cast<unsigned long long>(p1.path_id)}] = 1;
+                share_link.at(p1.path_id).at(p2.path_id) = 1;
+                share_link.at(p2.path_id).at(p1.path_id) = 1;
                 k1k2.emplace_back(p1.path_id, p2.path_id);
              }
         }
