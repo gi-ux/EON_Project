@@ -4,7 +4,7 @@ reset;
 option solver gurobi;
 
 /* Disabilita il presolutore e attiva analisi di sensitivita' 	*/
-option gurobi_options 'outlev=1 mipgap=0.03';
+option gurobi_options 'outlev=1 mipgap=0.10';
 
 /* Mostra fino alla seconda cifra decimale */
 option display_round 2;

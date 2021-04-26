@@ -149,6 +149,23 @@ void compute_lambda(vector<Path> &paths, vector<Demand> &demands, vector<vector<
     }
 }
 
+int compute_q(vector<Demand> demands){
+    int max;
+    int min;
+    for (int i = 0; i < demands.size(); ++i) {
+        if (i == 0) {
+            min = demands[i].dem;
+            max = demands[i].dem;
+        } else if (demands[i].dem > max) {
+            max = demands[i].dem;
+        } else if (demands[i].dem < min) {
+            min = demands[i].dem;
+        }
+    }
+    return max/min;
+}
+
+
 template <typename T>
 std::string NumberToString (T Number)
 {
@@ -159,7 +176,7 @@ std::string NumberToString (T Number)
 
 void write_first_dat(string filename, vector<Path> paths, vector<pair<int, int>> k1k2, vector<Demand> demands, vector<PathsForT> kts, vector<string> modulations, int q,float g, float b, int s, map<string, int> r, vector<vector<int>> lambda){
     ofstream outfile;
-    outfile.open(filename + ".dat");
+    outfile.open("../" + filename + ".dat");
     cout << "Writing to the file" << endl;
     string data;
 
@@ -212,7 +229,7 @@ void write_first_dat(string filename, vector<Path> paths, vector<pair<int, int>>
 
     //Write Q
     data.append(NumberToString(q));
-    outfile << "param Q " EQUAL << data << CLOSE << endl;
+    outfile << "param Q " EQUAL <<" " + data << CLOSE << endl;
     data.clear();
 
     //Write G
@@ -268,7 +285,6 @@ void write_first_dat(string filename, vector<Path> paths, vector<pair<int, int>>
 }
 
 
-
 int main() {
     vector<Path> paths;
     vector<pair<int, int>> k1k2;
@@ -276,7 +292,6 @@ int main() {
     vector<PathsForT> kts;
     vector<vector<int>> reach = read_reach();
     vector<string> modulations = {"BPSK", "QPSK", "8 QAM", "16 QAM", "32 QAM", "64 QAM"};
-    int q = 4;
     float g = 12.5;
     float b = 37.5;
     int s = 4000;
@@ -287,7 +302,7 @@ int main() {
     }
 
     //Read paths
-    read_paths(paths, "..\\files\\1paths");
+    read_paths(paths, "..\\files\\3paths");
     for(auto &path : paths) {
         cout << path.to_string() << endl;
     }
@@ -296,7 +311,7 @@ int main() {
     NDArray share_link{{paths.size(), paths.size()}};
     compute_k1k2(paths, share_link, k1k2);
     for(auto &pair : k1k2){
-        cout << pair.first << " - " << pair.second << endl;
+        //cout << pair.first << " - " << pair.second << endl;
     }
 
     //Demands
@@ -305,14 +320,17 @@ int main() {
         cout << d.id_from << " " << d.id_to << " " << d.dem << endl;
     }
 
+    //Compute q
+    int q = compute_q(demands);
+
     //Kts
     compute_Kt(kts, paths, demands);
     for(auto &kt : kts){
-        cout << "Kt[" << kt.id_pair << "] = ";
+        //cout << "Kt[" << kt.id_pair << "] = ";
         for(auto &p : kt.paths){
-            cout << p.path_id << " ";
+            //cout << p.path_id << " ";
         }
-        cout << endl;
+        //cout << endl;
     }
 
 
