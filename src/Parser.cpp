@@ -44,16 +44,33 @@ void setPathModulation(Data &mod) {
         for(auto &p : mod.paths){
             if(d.id_from == p.id_from && d.id_to == p.id_to){
                 p.setModulation(controlModulation(d.dem));
-                //controlModulation(mod);
                 break;
             }
         }
     }
 }
 
+int getIntModulation(string modulation) {
+    if(modulation.compare("BPSK") == 0) {
+        return 0;
+    }else if(modulation.compare("QPSK") == 0) {
+        return 1;
+    }else if(modulation.compare("8 QAM") == 0) {
+        return 2;
+    }else if(modulation.compare("16 QAM") == 0) {
+        return 3;
+    }else if(modulation.compare("32 QAM") == 0) {
+        return 4;
+    }else if(modulation.compare("64 QAM") == 0) {
+        return 5;
+    }
+}
+
 void controlModulation(Data &mod) {
     for(auto &p : mod.paths){
-        //if(p.length < mod.lambda[p.path_id])
+        if(mod.lambda[getIntModulation(p.modulation)][p.path_id] == 0){
+            p.setModulation("No modulation possible!");
+        }
     }
 }
 
@@ -62,8 +79,8 @@ int main(){
     mod1.init();
     cout << countTransceiver(mod1) << endl;
     setPathModulation(mod1);
+    controlModulation(mod1);
     greedy_heuristic(mod1);
-    //greedy_heuristic(mod1);
     /*
     mod1.write_first_dat("test-finale");
 
