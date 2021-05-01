@@ -16,11 +16,14 @@ public:
     int id_from;
     int id_to;
     int length;
+    std::string modulation;
     std::vector<Link> links;
 
     Path(int pathId, int idFrom, int idTo, int length);
 
     virtual ~Path();
+
+    void setModulation(std::string mod);
 
     void append_link(Link link);
 
