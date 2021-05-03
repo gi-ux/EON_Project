@@ -103,6 +103,8 @@ void controlModulation(Data &mod) {
                 break;
             }
         }
+        if(num < 0)
+            p.setModulation("No modulation!");
     }
 }
 
