@@ -47,6 +47,8 @@ public:
 
     void write_first_dat(std::string filename);
 
+    void write_second_dat(std::string filename, std::map<std::string, std::vector<int>> &b_star, double smax_star, std::map<std::string, std::vector<int>> &beta_star);
+
     void init();
 
 
@@ -68,4 +70,6 @@ private:
     void compute_q();
 
     void compute_r();
+
+
 };

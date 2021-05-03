@@ -309,3 +309,89 @@ void Data::write_first_dat(string filename){
     }
     outfile << ";" << endl;
 }
+
+
+void Data::write_second_dat(string filename, map<string, vector<int>> &b_star, double smax_star, map<string, vector<int>> &beta_star){
+    ofstream outfile;
+    outfile.open("../" + filename + ".dat");
+    cout << "Writing to the file" << endl;
+    string data;
+
+    // Write K
+    for(auto &p : paths)
+    {
+        data.append(" ");
+        data.append(NumberToString(p.path_id));
+    }
+    data.append(";");
+    outfile << "set K " EQUAL <<data << endl;
+    data.clear();
+
+    //Write M
+    for(auto & i : modulations)
+    {
+        data.append(" ");
+        data.append(STRING+i+STRING);
+    }
+    outfile << "set M " EQUAL << data << CLOSE << endl;
+    data.clear();
+
+    //Write K1K2
+    for(auto &k12 : k1k2){
+        data.append(" ");
+        data.append(NumberToString(k12.first) + " " + NumberToString(k12.second) + "\n");
+    }
+    data.append(";");
+    outfile << "set K1K2 " EQUAL << data << endl;
+    data.clear();
+
+    //Write B
+    data.append(NumberToString(b));
+    outfile << "param B " EQUAL << " " + data << CLOSE << endl;
+    data.clear();
+
+    //Write S
+    data.append(NumberToString(s));
+    outfile << "param S " EQUAL << " " + data << CLOSE << endl;
+    data.clear();
+
+    //Write G
+    data.append(NumberToString(g));
+    outfile << "param G " EQUAL <<" " + data << CLOSE << endl;
+    data.clear();
+
+    //b_star
+    outfile << "param b_star :";
+    for(auto &p : paths){
+        outfile << " " << p.path_id;
+    }
+    outfile << " :=" << endl;
+    map<string, vector<int>>::iterator it;
+    for(it = b_star.begin(); it!=b_star.end(); ++it){
+        outfile  << it->first;
+        for(int i = 0; i < it->second.size(); i++){
+            outfile <<" " << it->second[i];
+        }
+        outfile << endl;
+    }
+    outfile << ";" << endl;
+
+    //Smax_star
+    outfile << "param Smax_star := ";
+    outfile << smax_star << ";" << endl;
+
+    //beta_star
+    outfile << "param beta_star :";
+    for(auto &p : paths){
+        outfile << " " << p.path_id;
+    }
+    outfile << " :=" << endl;
+    for(it = beta_star.begin(); it!=beta_star.end(); ++it){
+        outfile  << it->first;
+        for(int i = 0; i < it->second.size(); i++){
+            outfile <<" " << it->second[i];
+        }
+        outfile << endl;
+    }
+    outfile << ";" << endl;
+}

@@ -37,6 +37,7 @@ string controlModulation(int dem) {
     }else if(dem == 300) {
         return "64 QAM";
     }
+    return "";
 }
 
 void setPathModulation(Data &mod) {
@@ -64,6 +65,7 @@ int getIntModulation(string modulation) {
     }else if(modulation.compare("64 QAM") == 0) {
         return 5;
     }
+    return -1;
 }
 
 void controlModulation(Data &mod) {
@@ -81,7 +83,7 @@ int main(){
     setPathModulation(mod1);
     controlModulation(mod1);
     greedy_heuristic(mod1);
-    /*
+
     mod1.write_first_dat("test-finale");
 
     ampl::Environment env("ampl");
@@ -92,18 +94,36 @@ int main(){
     ampl.readData("../test-finale.dat");
     ampl.solve();
 
-    ampl::Variable smax = ampl.getVariable("Smax");
-    cout << "Smax: " << smax.get().value() << endl;
+    //Get b
+    map<string, vector<int>> b_star;
+    ampl::Variable b = ampl.getVariable("b");
+    ampl::DataFrame b_df = b.getValues();
+    for(int i = 0; i < b_df.getColumn("index0").size(); i++){
+        string key = b_df.getColumn("index0")[i].toString();
+        b_star[key].push_back(b_df.getRowByIndex(i)[2].dbl());
+    }
 
-    ampl::Variable f = ampl.getVariable("f");
-    ampl::DataFrame df = f.getValues();
-    cout << "f" << f[0].value() << endl;
+    //Get Smax
+    ampl::Variable smax_star = ampl.getVariable("Smax");
+
+    //Get Beta
+    map<string, vector<int>> beta_star;
+    ampl::Variable beta = ampl.getVariable("Beta");
+    ampl::DataFrame beta_df = beta.getValues();
+    for(int i = 0; i < beta_df.getColumn("index0").size(); i++){
+        string key = beta_df.getColumn("index0")[i].toString();
+        beta_star[key].push_back(beta_df.getRowByIndex(i)[2].dbl());
+    }
+
+
+    mod1.write_second_dat("secondMod", b_star, smax_star.get().value(), beta_star);
 
     //Get z
     ampl::Objective z = ampl.getObjective("z");
     cout << z.get().value() << endl;
-    */
 
 
+
+    return 0;
 }
 
