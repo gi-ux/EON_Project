@@ -7,19 +7,22 @@
 
 using namespace std;
 
-void greedy_heuristic(Data &mod){
-    for(auto &p : mod.paths){
-        cout << p.to_string() << endl;
-    }
-}
+vector<vector<int>> bmk;
+/*
+ *      1 2 3 ... 18
+ * bpsk 0
+ * qpsk 0
+ * ...  0
+ * */
 
-int countTransceiver(Data &mod){
+int countTransceiver(){
     int count = 0;
-    for(auto &p : mod.paths){
-        for(auto &l : p.links){
-            count++;
+    for (int i = 0; i < bmk.size(); i++){
+        for (int j = 0; j < bmk[i].size(); j++){
+            count += bmk[i][j];
         }
     }
+
     return count;
 }
 
@@ -37,6 +40,7 @@ string controlModulation(int dem) {
     }else if(dem == 300) {
         return "64 QAM";
     }
+    return "";
 }
 
 void setPathModulation(Data &mod) {
@@ -64,14 +68,64 @@ int getIntModulation(string modulation) {
     }else if(modulation.compare("64 QAM") == 0) {
         return 5;
     }
+    return -1;
+}
+
+string getStringModulation(int number) {
+    if(number == 0) {
+        return "BPSK";
+    }else if(number == 1) {
+        return "QPSK";
+    }else if(number == 2) {
+        return "8 QAM";
+    }else if(number == 3) {
+        return "16 QAM";
+    }else if(number == 4) {
+        return "32 QAM";
+    }else if(number == 5) {
+        return "64 QAM";
+    }
+    return "";
 }
 
 void controlModulation(Data &mod) {
     for(auto &p : mod.paths){
-        if(mod.lambda[getIntModulation(p.modulation)][p.path_id] == 0){
-            p.setModulation("No modulation possible!");
+        int num = getIntModulation(p.modulation);
+        int trans = 0;
+        while(num >= 0) {
+            if (mod.lambda[num][p.path_id] == 0) {
+                num--;
+                trans++;
+            }else {
+                trans++;
+                bmk[num][p.path_id] = trans;
+                p.setModulation(getStringModulation(num));
+                break;
+            }
         }
     }
+}
+
+double calculateZ(Data &mod) {
+    //alpha1 * Smax + alpha2 * (1/card(T)) * B * sum{m in M} sum{k in K} b[m,k];
+    double card = 1.0f/ (mod.demands.size()); //fix implicit cast (loss data)
+    cout<<"T Cardinality: "<<card<<endl;
+    double z = 1 * mod.s + 1000 * card * mod.b * countTransceiver();
+    return z;
+}
+
+void greedy_heuristic(Data &mod){
+    setPathModulation(mod);
+    controlModulation(mod);
+    cout << "Path with Modulation: "<<endl;
+    for(auto &p : mod.paths){
+        cout << p.to_string() << endl;
+    }
+    cout<<"S: " <<mod.s <<endl;
+    cout<<"B: "<<mod.b <<endl;
+    cout<<"Number of Transceivers couple: " << countTransceiver() << endl;
+    double z = calculateZ(mod);
+    cout<<"Z: "<<z<<endl;
 }
 
 int main(){
