@@ -131,11 +131,10 @@ void greedy_heuristic(Data &mod){
 }
 
 int main(){
-    Data mod1("..\\files\\1paths", "..\\files\\demand_50_100_safe");
+    Data mod1("..\\files\\1paths", "..\\files\\demand_100_400_safe");
     mod1.init();
-    cout << countTransceiver(mod1) << endl;
-    setPathModulation(mod1);
-    controlModulation(mod1);
+    vector<vector<int>> vec(6, vector<int> (mod1.paths.size()-1, 0));
+    bmk = vec;
     greedy_heuristic(mod1);
     /*
     mod1.write_first_dat("test-finale");
