@@ -182,7 +182,7 @@ void Data::compute_q(){
             min = demands[i].dem;
         }
     }
-    q = max/min;
+    q = max/50;
 }
 
 void Data::compute_r(){

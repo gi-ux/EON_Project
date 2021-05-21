@@ -142,15 +142,15 @@ int main (int argc,char*argv[]){
 
     Data mod2("..\\files\\"+paths, "..\\files\\"+demand);
     mod2.init();
-    mod2.write_first_dat("test-finale");
-/*
+    mod2.write_first_dat("firstMod");
+
 
     ampl::Environment env("ampl");
     ampl::AMPL ampl(env);
     ampl.setOption("solver", "gurobi");
     ampl.setOption("gurobi_options", "outlev=1 mipgap=0.03");
     ampl.read("../progetto.mod");
-    ampl.readData("../test-finale.dat");
+    ampl.readData("../firstMod.dat");
     ampl.solve();
 
     //Get b
@@ -175,13 +175,12 @@ int main (int argc,char*argv[]){
     }
 
 
-    mod1.write_second_dat("secondMod", b_star, smax_star.get().value(), beta_star);
+    mod2.write_second_dat("secondMod", b_star, smax_star.get().value(), beta_star);
 
     //Get z
     ampl::Objective z = ampl.getObjective("z");
     cout << z.get().value() << endl;
 
-    */
 
     return 0;
 }

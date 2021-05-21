@@ -9,8 +9,8 @@ option gurobi_options 'outlev=1 mipgap=0.03';
 /* Mostra fino alla seconda cifra decimale */
 option display_round 2;
 
-model progetto.mod;  
-data test-finale.dat;   
+model secondStage.mod;  
+data secondMod.dat;   
 
 solve;
 
