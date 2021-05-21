@@ -130,15 +130,19 @@ void greedy_heuristic(Data &mod){
     cout<<"Z: "<<z<<endl;
 }
 
-int main(){
-    Data mod1("..\\files\\1paths", "..\\files\\demand_100_400_safe");
+int main (int argc,char*argv[]){
+
+    string paths = argv[2];
+    string demand = argv[4];
+    Data mod1("..\\files\\1paths", "..\\files\\"+demand);
     mod1.init();
     vector<vector<int>> vec(6, vector<int> (mod1.paths.size()-1, 0));
     bmk = vec;
     greedy_heuristic(mod1);
-    /*
-    mod1.write_first_dat("test-finale");
-
+    Data mod2("..\\files\\"+paths, "..\\files\\"+demand);
+    mod2.init();
+    mod2.write_first_dat("test-finale");
+/*
     ampl::Environment env("ampl");
     ampl::AMPL ampl(env);
     ampl.setOption("solver", "gurobi");
