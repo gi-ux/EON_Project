@@ -9,8 +9,8 @@ option gurobi_options 'outlev=1 mipgap=0.03';
 /* Mostra fino alla seconda cifra decimale */
 option display_round 2;
 
-model secondStage.mod;  
-data secondMod.dat;   
+model progetto.mod;  
+data test-finale.dat;   
 
 solve;
 
@@ -21,6 +21,7 @@ display {j in 1.._nvars}
 display {j in 1.._ncons}
     (_conname[j],_con[j].body, _con[j].slack, _con[j].dual);
 
-for{(k1,k2) in K1K2}{
+display z;
+/*for{(k1,k2) in K1K2}{
 	printf "%f %f \n", f[k1], f[k2];
-}
+}*/

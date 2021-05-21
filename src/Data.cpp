@@ -11,7 +11,7 @@
 using namespace std;
 
 Data::Data(string pathFilename, string demandsFilename) : path_filename(std::move(
-        pathFilename)), demands_filename(std::move(demandsFilename)), q(0), g(12.5), b(37.5), s(4000) {
+        pathFilename)), demands_filename(std::move(demandsFilename)), q(0), g(1), b(3), s(320) {
 
 }
 
