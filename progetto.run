@@ -22,3 +22,6 @@ display {j in 1.._ncons}
     (_conname[j],_con[j].body, _con[j].slack, _con[j].dual);
 
 display z;
+/*for{(k1,k2) in K1K2}{
+	printf "%f %f \n", f[k1], f[k2];
+}*/

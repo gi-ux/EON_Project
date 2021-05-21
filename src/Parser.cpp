@@ -139,10 +139,12 @@ int main (int argc,char*argv[]){
     vector<vector<int>> vec(6, vector<int> (mod1.paths.size()-1, 0));
     bmk = vec;
     greedy_heuristic(mod1);
+
     Data mod2("..\\files\\"+paths, "..\\files\\"+demand);
     mod2.init();
     mod2.write_first_dat("test-finale");
 /*
+
     ampl::Environment env("ampl");
     ampl::AMPL ampl(env);
     ampl.setOption("solver", "gurobi");
@@ -151,18 +153,35 @@ int main (int argc,char*argv[]){
     ampl.readData("../test-finale.dat");
     ampl.solve();
 
-    ampl::Variable smax = ampl.getVariable("Smax");
-    cout << "Smax: " << smax.get().value() << endl;
+    //Get b
+    map<string, vector<int>> b_star;
+    ampl::Variable b = ampl.getVariable("b");
+    ampl::DataFrame b_df = b.getValues();
+    for(int i = 0; i < b_df.getColumn("index0").size(); i++){
+        string key = b_df.getColumn("index0")[i].toString();
+        b_star[key].push_back(b_df.getRowByIndex(i)[2].dbl());
+    }
 
-    ampl::Variable f = ampl.getVariable("f");
-    ampl::DataFrame df = f.getValues();
-    cout << "f" << f[0].value() << endl;
+    //Get Smax
+    ampl::Variable smax_star = ampl.getVariable("Smax");
+
+    //Get Beta
+    map<string, vector<int>> beta_star;
+    ampl::Variable beta = ampl.getVariable("Beta");
+    ampl::DataFrame beta_df = beta.getValues();
+    for(int i = 0; i < beta_df.getColumn("index0").size(); i++){
+        string key = beta_df.getColumn("index0")[i].toString();
+        beta_star[key].push_back(beta_df.getRowByIndex(i)[2].dbl());
+    }
+
+
+    mod1.write_second_dat("secondMod", b_star, smax_star.get().value(), beta_star);
 
     //Get z
     ampl::Objective z = ampl.getObjective("z");
     cout << z.get().value() << endl;
+
     */
 
-
+    return 0;
 }
-
