@@ -227,7 +227,7 @@ int main (int argc,char*argv[]){
     Data mod2("..\\files\\"+paths, "..\\files\\"+demand);
     mod2.init();
     mod2.write_first_dat("firstMod");
-/*
+
 
 
     ampl::Environment env("ampl");
@@ -269,7 +269,7 @@ int main (int argc,char*argv[]){
     //Get z
     ampl::Objective z = ampl.getObjective("z");
     cout << z.get().value() << endl;
-*/
+
 
     return 0;
 }
