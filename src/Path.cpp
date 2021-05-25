@@ -15,6 +15,10 @@ void Path::setModulation(std::string mod) {
     modulation = mod;
 }
 
+void Path::setInitialFrequency(int initFreq) {
+    initialFrequency = initFreq;
+}
+
 void Path::append_link(Link link) {
     Path::links.push_back(link);
 }
@@ -40,7 +44,7 @@ std::string Path::to_string() {
         links.append("link " + std::to_string(link.id_from) + " , " + std::to_string(link.id_to));
     }
 
-    return std::string("path id: " + std::to_string(path_id) + " id from: " + std::to_string(id_from) + " id to: " + std::to_string(id_to) + " length: " + std::to_string(length) + " modulation: " + modulation + " links: ").append(links);
+    return std::string("path id: " + std::to_string(path_id) + " id from: " + std::to_string(id_from) + " id to: " + std::to_string(id_to) + " length: " + std::to_string(length) + " modulation: " + modulation + " Initial Frequency: " + std::to_string(initialFrequency) + " links: ").append(links);
 }
 
 bool operator== (const Path &p1, const Path &p2){

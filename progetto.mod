@@ -15,7 +15,7 @@ param alpha1 = 1; #fattori di moltiplicazione
 param alpha2 = 1000;
 
 var dk1k2{K1K2} binary; #0 se f(k1) < f(k2) € K1K2
-var Smax >= 0; #spettro massimo utilizzato nella soluzione specifica
+var Smax >= 0, <= S; #spettro massimo utilizzato nella soluzione specifica
 var f{K} >= 0; #frequenze di inizio
 var b{M,K} integer >= 0; #numero di coppie di transceiver (uno su s e uno su d) con modulazione m che vengono usate su un percorso k
 var Beta{M,K} binary; #1 se la modulazione m viene usata sul traffico t sul percorso k
@@ -25,7 +25,7 @@ minimize z: alpha1 * Smax + alpha2 * (1/card(T)) * B * sum{m in M} sum{k in K} b
 
 s.t. primo_vincolo{t in T}: sum{m in M} sum{k in Kt[t]} Beta[m,k] = 1;
 
-s.t. secondo_vincolo{m in M, k in K}: Lam[m,k] * Q * Beta[m,k] >= b[m,k];
+s.t. secondo_vincolo{m in M, k in K}: b[m,k] <= Lam[m,k] * Q * Beta[m,k];
 
 s.t. terzo_vincolo{t in T}: sum{m in M} sum{k in Kt[t]} r[m] * b[m,k] >= d[t];
 

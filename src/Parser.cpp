@@ -4,10 +4,12 @@
 
 #include "Data.h"
 #include "ampl/ampl.h"
+#include <chrono>
 
 using namespace std;
 
 vector<vector<int>> bmk;
+map<int,vector<Path>> allFrequency;
 /*
  *      1 2 3 ... 18
  * bpsk 0
@@ -108,49 +110,133 @@ void controlModulation(Data &mod) {
     }
 }
 
+bool controlPath(Data &mod, Path path, Path control) {
+    for(auto &p : mod.k1k2) {
+        if(p.first == path.path_id) {
+            if(p.second == control.path_id) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+void calculateFrequency(Data &mod) {
+    for(auto &p : mod.paths) {
+        for(int i = 0; i < 320; i++) {
+            auto paths = allFrequency[i];
+            bool assign = true;
+            if(!paths.empty()) {
+                for(auto &f : paths) {
+                    assign = controlPath(mod, f, p);
+                    if(!assign) {
+                        break;
+                    }
+                }
+            }
+            if(assign) {
+                allFrequency[i].push_back(p);
+                allFrequency[i+1].push_back(p);
+                allFrequency[i+2].push_back(p);
+                if(getIntModulation(p.modulation) == -1){
+                    p.setModulation("No modulation feasible");
+                    p.setInitialFrequency(-1);
+                }
+                else {
+                    int count = bmk[getIntModulation(p.modulation)][p.path_id];
+
+                    if(count > 1) {
+                        for(int j = 0; j < (count-1)*3 + 1; j++) {
+                            allFrequency[i+3+j].push_back(p);
+                        }
+                    }else if(count == 1) {
+                        allFrequency[i+3].push_back(p);
+                    }
+                    if(i + count * 3 <= 320){
+                        p.setInitialFrequency(i);
+                    }else {
+                        p.setModulation("No modulation feasible");
+                        p.setInitialFrequency(-1);
+                    }
+                    break;
+                }
+            }
+        }
+    }
+}
+
+int computeSmax(Data &mod) {
+    int temp = 0;
+    Path *path;
+    for(auto &p : mod.paths) {
+        if(p.initialFrequency > temp) {
+            temp = p.initialFrequency;
+            path = &p;
+        }
+    }
+    temp += bmk[getIntModulation(path->modulation)][path->path_id] * 3 + 1;
+    return temp;
+}
+
 double calculateZ(Data &mod) {
     //alpha1 * Smax + alpha2 * (1/card(T)) * B * sum{m in M} sum{k in K} b[m,k];
     double card = 1.0f/ (mod.demands.size()); //fix implicit cast (loss data)
     cout<<"T Cardinality: "<<card<<endl;
-    double z = 1 * mod.s + 1000 * card * mod.b * countTransceiver();
+    double z = 1 * computeSmax(mod) + 1000 * card * mod.b * countTransceiver();
     return z;
 }
 
 void greedy_heuristic(Data &mod){
     setPathModulation(mod);
     controlModulation(mod);
+    calculateFrequency(mod);
     cout << "Path with Modulation: "<<endl;
     for(auto &p : mod.paths){
         cout << p.to_string() << endl;
     }
-    cout<<"S: " <<mod.s <<endl;
-    cout<<"B: "<<mod.b <<endl;
-    cout<<"Number of Transceivers couple: " << countTransceiver() << endl;
+    cout<<"Smax: " << computeSmax(mod) <<endl;
+    cout<<"Number of Transceiver couples: " << countTransceiver() << endl;
     double z = calculateZ(mod);
     cout<<"Z: "<<z<<endl;
 }
 
 int main (int argc,char*argv[]){
+    string paths = "1paths";
+    string demand = "demand_50_100_safe";
 
-    string paths = argv[2];
-    string demand = argv[4];
+    if(argc == 5) {
+        paths = argv[2];
+        demand = argv[4];
+    }
+
     Data mod1("..\\files\\1paths", "..\\files\\"+demand);
     mod1.init();
     vector<vector<int>> vec(6, vector<int> (mod1.paths.size()-1, 0));
     bmk = vec;
+
+    auto start = std::chrono::high_resolution_clock::now();
     greedy_heuristic(mod1);
+    auto stop = std::chrono::high_resolution_clock::now();
+
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+
+    cout << "Heuristic execution time: " << duration.count() << " ms" << endl;
+
+    cout << "----------- Ampl ---------------" << endl;
 
     Data mod2("..\\files\\"+paths, "..\\files\\"+demand);
     mod2.init();
     mod2.write_first_dat("firstMod");
+/*
 
 
     ampl::Environment env("ampl");
     ampl::AMPL ampl(env);
     ampl.setOption("solver", "gurobi");
-    ampl.setOption("gurobi_options", "outlev=1 mipgap=0.03");
+    ampl.setOption("gurobi_options", "outlev=1 mipgap=0.04 timelim=3600");
     ampl.read("../progetto.mod");
     ampl.readData("../firstMod.dat");
+
     ampl.solve();
 
     //Get b
@@ -162,8 +248,11 @@ int main (int argc,char*argv[]){
         b_star[key].push_back(b_df.getRowByIndex(i)[2].dbl());
     }
 
+    ampl.display("_total_solve_elapsed_time");
+
     //Get Smax
     ampl::Variable smax_star = ampl.getVariable("Smax");
+    cout << "Smax: " << smax_star.get().value() << endl;
 
     //Get Beta
     map<string, vector<int>> beta_star;
@@ -180,7 +269,7 @@ int main (int argc,char*argv[]){
     //Get z
     ampl::Objective z = ampl.getObjective("z");
     cout << z.get().value() << endl;
-
+*/
 
     return 0;
 }

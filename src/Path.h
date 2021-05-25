@@ -17,6 +17,7 @@ public:
     int id_to;
     int length;
     std::string modulation;
+    int initialFrequency;
     std::vector<Link> links;
 
     Path(int pathId, int idFrom, int idTo, int length);
@@ -24,6 +25,8 @@ public:
     virtual ~Path();
 
     void setModulation(std::string mod);
+
+    void setInitialFrequency(int initialFrequency);
 
     void append_link(Link link);
 
